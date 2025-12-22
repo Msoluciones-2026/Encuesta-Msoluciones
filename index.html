@@ -249,7 +249,10 @@ footer {
     <textarea rows="4" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
   </div>
 
-  <button class="send" onclick="enviar()">Enviar Encuesta</button>
+  <button class="send" id="btnEnviar" onclick="enviar()">
+  Enviar Encuesta
+  </button>
+
   <footer>© 2025 Servicios y Mantenciones MSoluciones</footer>
 
 </div>
@@ -283,7 +286,11 @@ for (let i = 1; i <= 10; i++) {
 
 // 📤 Envío a Google Sheets
 async function enviar() {
+  const btn = document.getElementById("btnEnviar");
 
+  // Evitar doble envío
+  btn.disabled = true;
+  btn.textContent = "Enviando…";
   const data = {
     fecha: document.querySelector('input[type="date"]').value,
     empresa: document.querySelectorAll('input')[1].value,
@@ -307,9 +314,14 @@ async function enviar() {
     body: JSON.stringify(data)
   });
 
-  alert("Gracias por responder");
+    alert("✅ Gracias por responder la encuesta");
+    btn.textContent = "Enviada ✔️";
+  } catch (e) {
+    alert("Error al enviar, intente nuevamente");
+    btn.disabled = false;
+    btn.textContent = "Enviar Encuesta";
+  }
 }
-
 
 // ⭐ contar estrellas
 function getStars(i) {
