@@ -336,12 +336,27 @@ async function enviar() {
     comentarios: textarea.value
   };
 
-  if (!data.empresa || !data.nombre) {
-    alert("Por favor complete los datos del cliente");
-    btn.disabled = false;
-    btn.textContent = "Enviar Encuesta";
-    return;
-  }
+if (!data.fecha || !data.empresa || !data.nombre || !data.cargo) {
+  alert("Por favor complete todos los datos del cliente");
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
+if (!todasLasEstrellasRespondidas()) {
+  alert("Por favor responda todas las preguntas de evaluación");
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
+if (!data.nps) {
+  alert("Por favor indique qué tan probable es que nos recomiende");
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
 
   try {
     await fetch("https://script.google.com/macros/s/AKfycbx-nK-58lqnIydtZdHCGoKsLb2kqeHqdTl6rH5xVaUB6HCFHSb9q7cIYohdVCTXWDZO/exec", {
@@ -376,6 +391,15 @@ function getStars(i) {
   return [...document.querySelectorAll('.stars')[i].children]
     .filter(s => s.classList.contains('active')).length;
 }
+function todasLasEstrellasRespondidas() {
+  for (let i = 0; i < 4; i++) {
+    if (getStars(i) === 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 </script>
 
 
