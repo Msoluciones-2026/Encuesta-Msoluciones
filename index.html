@@ -184,12 +184,6 @@ footer {
 }
 
 @media (max-width: 640px) {
-  .nps-labels {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -201,11 +195,12 @@ footer {
   .card {
     padding: 20px;
   }
-  @media (max-width: 640px) {
+
   input, textarea {
-    font-size: 16px; 
+    font-size: 16px; /* evita zoom en iOS */
+  }
 }
-}
+
 
 .error {
   border-color: #dc2626 !important;
@@ -217,6 +212,12 @@ footer {
   font-size: 13px;
   margin-top: 6px;
   font-weight: 600;
+}
+.success-text {
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 12px;
 }
 
 </style>
@@ -292,8 +293,9 @@ footer {
     <label>Comentarios Adicionales (Opcional)</label>
     <textarea rows="4" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
   </div>
-  
+
   <div id="mensajeError" class="error-text" style="display:none;"></div>
+  <div id="mensajeSuccess" class="success-text" style="display:none;"></div>
 
   <button class="send" id="btnEnviar" onclick="enviar()">
   Enviar Encuesta
@@ -328,7 +330,41 @@ for (let i = 1; i <= 10; i++) {
   nps.appendChild(b);
 }
 
+function limpiarErrores() {
+  document.querySelectorAll('.error').forEach(e =>
+    e.classList.remove('error')
+  );
+
+  const err = document.getElementById("mensajeError");
+  const ok = document.getElementById("mensajeSuccess");
+
+  err.style.display = "none";
+  err.textContent = "";
+
+  ok.style.display = "none";
+  ok.textContent = "";
+}
+
+function mostrarError(texto, elemento) {
+  const msg = document.getElementById("mensajeError");
+  msg.textContent = texto;
+  msg.style.display = "block";
+
+  if (elemento) {
+    elemento.classList.add("error");
+    elemento.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function mostrarSuccess(texto) {
+  const msg = document.getElementById("mensajeSuccess");
+  msg.textContent = texto;
+  msg.style.display = "block";
+}
+
+
 async function enviar() {
+  limpiarErrores(); 
   const btn = document.getElementById("btnEnviar");
 
   btn.disabled = true;
@@ -350,26 +386,54 @@ async function enviar() {
     comentarios: textarea.value
   };
 
-if (!data.fecha || !data.empresa || !data.nombre || !data.cargo) {
-  alert("Por favor complete todos los datos del cliente");
+if (!data.fecha) {
+  mostrarError("Debe indicar la fecha", inputs[0]);
   btn.disabled = false;
   btn.textContent = "Enviar Encuesta";
   return;
 }
+
+if (!data.empresa) {
+  mostrarError("Debe indicar la empresa", inputs[1]);
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
+if (!data.nombre) {
+  mostrarError("Debe indicar su nombre", inputs[2]);
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
+if (!data.cargo) {
+  mostrarError("Debe indicar su cargo", inputs[3]);
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+  return;
+}
+
 
 if (!todasLasEstrellasRespondidas()) {
-  alert("Por favor responda todas las preguntas de evaluación");
+  const primera = document.querySelector('.stars:not(:has(.active))');
+  mostrarError("Debe responder todas las preguntas de evaluación", primera);
   btn.disabled = false;
   btn.textContent = "Enviar Encuesta";
   return;
 }
 
+
 if (!data.nps) {
-  alert("Por favor indique qué tan probable es que nos recomiende");
+  mostrarError(
+    "Debe indicar qué tan probable es que nos recomiende",
+    document.getElementById("nps")
+  );
   btn.disabled = false;
   btn.textContent = "Enviar Encuesta";
   return;
 }
+
 
 
   try {
@@ -380,7 +444,7 @@ if (!data.nps) {
       body: JSON.stringify(data)
     });
 
-    alert("Gracias por responder la encuesta");
+    mostrarSuccess("Gracias por responder la encuesta");
 
     inputs.forEach(i => i.value = "");
     textarea.value = "";
@@ -395,10 +459,11 @@ if (!data.nps) {
     btn.textContent = "Enviar Encuesta";
 
   } catch (e) {
-    alert("Error al enviar, intente nuevamente");
+    mostrarError("Error al enviar, intente nuevamente");
     btn.disabled = false;
     btn.textContent = "Enviar Encuesta";
   }
+
 }
 
 function getStars(i) {
