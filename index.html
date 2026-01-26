@@ -380,8 +380,6 @@ async function enviar() {
   const fechaActual = new Date().toISOString().split('T')[0];
   const btn = document.getElementById("btnEnviar");
 
-  btn.disabled = true;
-  btn.textContent = "Enviando…";
 
   const inputs = document.querySelectorAll('input');
   const textarea = document.querySelector('textarea');
@@ -458,6 +456,8 @@ if (!data.nps) {
 
 
 
+  btn.disabled = true;
+  btn.textContent = "Enviando…";
   try {
     await fetch("https://script.google.com/macros/s/AKfycbyzfIWTmXC_dPx73yR0iT2bLDqncfy1mmwQHxZF7rJ2uhhGai6cPj1vq2MFOfVXiX6O/exec", {
       method: "POST",
@@ -501,6 +501,16 @@ function todasLasEstrellasRespondidas() {
   return true;
 }
 
+const inputs = document.querySelectorAll('input');
+
+inputs.forEach(input => {
+  input.addEventListener("input", () => {
+    if (input.value.trim() !== "") {
+      input.classList.remove("error");
+      document.getElementById("mensajeError").style.display = "none";
+    }
+  });
+});
 
 
 </script>
