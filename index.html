@@ -148,6 +148,39 @@ footer {
   margin-top:24px;
 }
 
+.logo-img {
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.nps-labels {
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:6px;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  input, textarea {
+    font-size: 16px;
+  }
+}
+
 .error {
   border-color: #dc2626 !important;
   background: #fef2f2;
@@ -212,6 +245,10 @@ footer {
   <div class="question">
     <h4>7. ¿Recomendaría nuestros servicios?</h4>
     <div class="nps" id="nps"></div>
+    <div class="nps-labels">
+      <span>Poco probable</span>
+      <span>Muy probable</span>
+    </div>
   </div>
 
   <div class="question">
@@ -294,6 +331,7 @@ async function enviar() {
   const textarea = document.querySelector('textarea');
 
   const data = {
+    fecha: new Date().toISOString().split('T')[0],
     empresa: inputs[0].value,
     nombre: inputs[1].value,
     cargo: inputs[2].value,
@@ -308,12 +346,12 @@ async function enviar() {
     comentarios: textarea.value
   };
 
-  if (!data.empresa) return mostrarError("Debe indicar la empresa", inputs[0]);
-  if (!data.nombre) return mostrarError("Debe indicar su nombre", inputs[1]);
-  if (!data.cargo) return mostrarError("Debe indicar su cargo", inputs[2]);
-  if (!data.correo) return mostrarError("Debe indicar un correo electrónico", inputs[3]);
+  if (!data.empresa) { mostrarError("Debe indicar la empresa", inputs[0]); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
+  if (!data.nombre) { mostrarError("Debe indicar su nombre", inputs[1]); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
+  if (!data.cargo) { mostrarError("Debe indicar su cargo", inputs[2]); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
+  if (!data.correo) { mostrarError("Debe indicar un correo electrónico", inputs[3]); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
 
-  /* 🔒 VALIDACIÓN DEL @ */
+  // 🔒 VALIDACIÓN DEL @ (ÚNICO CAMBIO)
   if (!data.correo.includes("@")) {
     mostrarError("Debe indicar un correo electrónico válido", inputs[3]);
     btn.disabled = false;
@@ -321,11 +359,8 @@ async function enviar() {
     return;
   }
 
-  if (!todasLasEstrellasRespondidas())
-    return mostrarError("Debe responder todas las preguntas de evaluación");
-
-  if (!data.nps)
-    return mostrarError("Debe indicar qué tan probable es que nos recomiende");
+  if (!todasLasEstrellasRespondidas()) { mostrarError("Debe responder todas las preguntas de evaluación"); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
+  if (!data.nps) { mostrarError("Debe indicar qué tan probable es que nos recomiende"); btn.disabled=false; btn.textContent="Enviar Encuesta"; return; }
 
   await fetch("https://script.google.com/macros/s/AKfycbyzfIWTmXC_dPx73yR0iT2bLDqncfy1mmwQHxZF7rJ2uhhGai6cPj1vq2MFOfVXiX6O/exec", {
     method: "POST",
