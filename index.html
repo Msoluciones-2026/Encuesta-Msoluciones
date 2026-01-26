@@ -206,6 +206,10 @@ footer {
   border-color: #dc2626 !important;
   background: #fef2f2;
 }
+.question-error {
+  border-color: #dc2626 !important;
+  background: #fef2f2;
+}
 
 .error-text {
   color: #dc2626;
@@ -321,6 +325,7 @@ document.querySelectorAll('.stars').forEach(block => {
       [...block.children].forEach((c, idx) =>
         c.classList.toggle('active', idx < i)
       );
+      block.closest('.question')?.classList.remove('question-error');
     };
     block.appendChild(s);
   }
@@ -386,10 +391,11 @@ async function enviar() {
 
   const data = {
     fecha: fechaActual,
-    empresa: inputs[0].value,
-    nombre: inputs[1].value,
-    cargo: inputs[2].value,
-    correo: inputs[3].value,
+    empresa: inputsFormulario[0].value,
+    nombre: inputsFormulario[1].value,
+    cargo: inputsFormulario[2].value,
+    correo: inputsFormulario[3].value,
+
 
     q1: getStars(0), // Calidad
     q2: getStars(1), // Requisitos
@@ -404,7 +410,7 @@ async function enviar() {
 
 
 if (!data.empresa) {
-  mostrarError("Debe indicar la empresa", inputs[0]);
+  mostrarError("Debe indicar la empresa", inputsFormulario[0]);
   cancelarEnvio();
   return;
 
@@ -412,25 +418,25 @@ if (!data.empresa) {
 
 
 if (!data.nombre) {
-  mostrarError("Debe indicar su nombre", inputs[1]);
+  mostrarError("Debe indicar su nombre", inputsFormulario[1]);
   cancelarEnvio();
   return;
 }
 
 if (!data.cargo) {
-  mostrarError("Debe indicar su cargo", inputs[2]);
+  mostrarError("Debe indicar su cargo", inputsFormulario[2]);
   cancelarEnvio();
   return;
 }
 
 if (!data.correo) {
-  mostrarError("Debe indicar un correo electrónico", inputs[3]);
+  mostrarError("Debe indicar un correo electrónico", inputsFormulario[3]);
   cancelarEnvio();
   return;
 }
 
 if (!data.correo.includes("@")) {
-  mostrarError("Debe indicar un correo electrónico válido", inputs[3]);
+  mostrarError("Debe indicar un correo electrónico válido", inputsFormulario[3]);
   cancelarEnvio();
   return;
 
@@ -438,10 +444,14 @@ if (!data.correo.includes("@")) {
 
 
 if (!todasLasEstrellasRespondidas()) {
+  const pregunta = primeraPreguntaSinResponder();
+  if (pregunta) {
+    pregunta.classList.add("question-error");
+    pregunta.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
   mostrarError("Debe responder todas las preguntas de evaluación");
   cancelarEnvio();
   return;
-
 }
 
 
@@ -468,7 +478,7 @@ if (!data.nps) {
 
     mostrarSuccess("Gracias por responder la encuesta");
     // 🧹 LIMPIAR FORMULARIO
-    inputs.forEach(i => i.value = "");
+    inputsFormulario.forEach(i => i.value = "");
     textarea.value = "";
     
     document.querySelectorAll('.stars span')
@@ -501,7 +511,7 @@ function todasLasEstrellasRespondidas() {
   return true;
 }
 
-const inputs = document.querySelectorAll('input');
+const inputsFormulario = document.querySelectorAll('input');
 
 inputsFormulario.forEach(input => {
   input.addEventListener("input", () => {
@@ -511,6 +521,18 @@ inputsFormulario.forEach(input => {
     }
   });
 });
+
+function primeraPreguntaSinResponder() {
+  const preguntas = document.querySelectorAll('.question');
+
+  for (let i = 0; i < TOTAL_PREGUNTAS; i++) {
+    const estrellas = preguntas[i].querySelectorAll('.stars span.active');
+    if (estrellas.length === 0) {
+      return preguntas[i];
+    }
+  }
+  return null;
+}
 
 
 </script>
