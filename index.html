@@ -369,6 +369,11 @@ function mostrarSuccess(texto) {
   msg.style.display = "block";
 }
 
+function cancelarEnvio() {
+  const btn = document.getElementById("btnEnviar");
+  btn.disabled = false;
+  btn.textContent = "Enviar Encuesta";
+}
 
 async function enviar() {
   limpiarErrores();
@@ -402,47 +407,44 @@ async function enviar() {
 
 if (!data.empresa) {
   mostrarError("Debe indicar la empresa", inputs[0]);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
+
 }
 
 
 if (!data.nombre) {
   mostrarError("Debe indicar su nombre", inputs[1]);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
 }
 
 if (!data.cargo) {
   mostrarError("Debe indicar su cargo", inputs[2]);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
 }
 
 if (!data.correo) {
   mostrarError("Debe indicar un correo electrónico", inputs[3]);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
 }
 
 if (!data.correo.includes("@")) {
   mostrarError("Debe indicar un correo electrónico válido", inputs[3]);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
+
 }
 
 
 if (!todasLasEstrellasRespondidas()) {
   const primera = document.querySelector('.stars:not(:has(.active))');
   mostrarError("Debe responder todas las preguntas de evaluación", primera);
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
+
 }
 
 
@@ -451,8 +453,7 @@ if (!data.nps) {
     "Debe indicar qué tan probable es que nos recomiende",
     document.getElementById("nps")
   );
-  btn.disabled = false;
-  btn.textContent = "Enviar Encuesta";
+  cancelarEnvio();
   return;
 }
 
