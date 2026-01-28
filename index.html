@@ -223,6 +223,10 @@ footer {
   font-weight: 700;
   margin-top: 12px;
 }
+.bloqueado {
+  pointer-events: none;
+  opacity: 0.6;
+}
 
 </style>
 </head>
@@ -317,6 +321,8 @@ document.querySelectorAll('.stars').forEach(block => {
     const s = document.createElement('span');
     s.innerHTML = '★';
     s.onclick = () => {
+      if (encuestaYaEnviada()) return;
+    
       [...block.children].forEach((c, idx) =>
         c.classList.toggle('active', idx < i)
       );
@@ -331,9 +337,12 @@ for (let i = 1; i <= 10; i++) {
   const b = document.createElement('button');
   b.textContent = i;
   b.onclick = () => {
+    if (encuestaYaEnviada()) return;
+  
     [...nps.children].forEach(c => c.classList.remove('active'));
     b.classList.add('active');
   };
+
   nps.appendChild(b);
 }
 
@@ -526,14 +535,24 @@ function marcarEncuestaEnviada() {
 }
 
 function bloquearFormulario() {
+  // Inputs normales
   document.querySelectorAll("input, textarea")
     .forEach(el => el.disabled = true);
-  
-  document.getElementById("btnEnviar").style.display = "none";
 
+  // Bloquear estrellas
+  document.querySelectorAll(".stars")
+    .forEach(el => el.classList.add("bloqueado"));
+
+  // Bloquear NPS
+  document.querySelectorAll(".nps")
+    .forEach(el => el.classList.add("bloqueado"));
+
+  // Ocultar botón enviar
+  document.getElementById("btnEnviar").style.display = "none";
 
   mostrarSuccess("Gracias, ya registramos su respuesta.");
 }
+
 if (encuestaYaEnviada()) {
   bloquearFormulario();
 }
