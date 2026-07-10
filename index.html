@@ -8,8 +8,8 @@
 <style>
 :root {
   --green:#16a34a;
-  --gray:#f4f4f5;
   --dark:#111827;
+  --gold:#facc15;
 }
 
 * { box-sizing:border-box; font-family:system-ui, -apple-system, Segoe UI, Roboto; }
@@ -34,35 +34,6 @@ body {
   align-items:center;
   gap:16px;
   margin-bottom:32px;
-}
-
-.logo {
-  width:48px;
-  height:48px;
-  border:2px solid var(--green);
-  transform:rotate(45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.logo span {
-  transform:rotate(-45deg);
-  color:var(--green);
-  font-weight:900;
-}
-
-.header h1 {
-  margin:0;
-  font-size:14px;
-  color:#16a34a;
-  letter-spacing:.08em;
-}
-
-.header h2 {
-  margin:0;
-  font-size:28px;
-  font-weight:900;
 }
 
 .card {
@@ -92,7 +63,7 @@ label {
   display:block;
 }
 
-input, textarea {
+input, textarea, select {
   width:100%;
   padding:12px;
   border:1px solid #d1d5db;
@@ -101,6 +72,20 @@ input, textarea {
 }
 
 textarea { resize:none; }
+
+input::placeholder, textarea::placeholder {
+  color:#9ca3af;
+}
+
+#region {
+  color:#9ca3af;
+}
+#region option {
+  color:var(--dark);
+}
+#region.has-value {
+  color:var(--dark);
+}
 
 .question {
   border:1px solid #e5e7eb;
@@ -126,7 +111,7 @@ textarea { resize:none; }
   color:#e5e7eb;
 }
 
-.stars span.active { color:#facc15; }
+.stars span.active { color:var(--gold); }
 
 .nps {
   display:flex;
@@ -146,8 +131,8 @@ textarea { resize:none; }
 }
 
 .nps button.active {
-  background:var(--green);
-  color:white;
+  background:var(--gold);
+  color:var(--dark);
 }
 
 .send {
@@ -196,8 +181,18 @@ footer {
     padding: 20px;
   }
 
-  input, textarea {
+  input, textarea, select {
     font-size: 16px; /* evita zoom en iOS */
+  }
+
+  .nps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .nps button {
+    min-width: 0;
+    padding: 14px 0;
   }
 }
 
@@ -217,12 +212,6 @@ footer {
   margin-top: 6px;
   font-weight: 600;
 }
-.success-text {
-  color: #16a34a;
-  font-size: 14px;
-  font-weight: 700;
-  margin-top: 12px;
-}
 .bloqueado {
   pointer-events: none;
   opacity: 0.6;
@@ -237,7 +226,10 @@ footer {
 
   <div class="header">
   <img src="logo-msoluciones.png" alt="MSoluciones" class="logo-img">
+  <span id="tipoEncuesta" style="display:none; font-size:12px; font-weight:700; color:#6b7280; letter-spacing:.04em; text-transform:uppercase;"></span>
 </div>
+
+  <div id="encuestaForm">
 
   <div class="card">
     <h3>Datos del Cliente</h3>
@@ -257,6 +249,29 @@ footer {
       <div>
         <label>Correo electrónico</label>
         <input type="email" placeholder="correo@ejemplo.com">
+        <div id="mensajeErrorEmail" class="error-text" style="display:none;"></div>
+      </div>
+      <div>
+        <label>Región</label>
+        <select id="region">
+          <option value="">Selecciona una región</option>
+          <option value="Arica y Parinacota">Arica y Parinacota</option>
+          <option value="Tarapacá">Tarapacá</option>
+          <option value="Antofagasta">Antofagasta</option>
+          <option value="Atacama">Atacama</option>
+          <option value="Coquimbo">Coquimbo</option>
+          <option value="Valparaíso">Valparaíso</option>
+          <option value="Metropolitana de Santiago">Metropolitana de Santiago</option>
+          <option value="Libertador General Bernardo O'Higgins">Libertador General Bernardo O'Higgins</option>
+          <option value="Maule">Maule</option>
+          <option value="Ñuble">Ñuble</option>
+          <option value="Biobío">Biobío</option>
+          <option value="La Araucanía">La Araucanía</option>
+          <option value="Los Ríos">Los Ríos</option>
+          <option value="Los Lagos">Los Lagos</option>
+          <option value="Aysén del General Carlos Ibáñez del Campo">Aysén del General Carlos Ibáñez del Campo</option>
+          <option value="Magallanes y de la Antártica Chilena">Magallanes y de la Antártica Chilena</option>
+        </select>
       </div>
     </div>
   </div>
@@ -266,28 +281,23 @@ footer {
 
   <div class="question">
     <h4>#1 Calidad del Servicio</h4>
-    <p>¿Cómo calificaría la calidad técnica del mantenimiento realizado?</p>
+    <p>¿Cómo calificaría el servicio entregado?</p>
     <div class="stars" data-q="q1"></div>
   </div>
   <div class="question">
-    <h4>#2 Cumplimiento de Requisitos</h4>
-    <p>¿El servicio cumplió con los requisitos establecidos?</p>
+    <h4>#2 Resolución del Problema</h4>
+    <p>¿El servicio solucionó su problema?</p>
     <div class="stars" data-q="q2"></div>
   </div>
   <div class="question">
     <h4>#3 Entrega del Servicio</h4>
     <p>¿El servicio se entregó de forma oportuna y puntual?</p>
-    <div class="stars" data-q="q2"></div>
-  </div>
-  <div class="question">
-    <h4>#4 Cumplimiento de Expectativas</h4>
-    <p>¿El servicio cumplió con sus expectativas?</p>
-    <div class="stars" data-q="qX"></div>
-  </div>
-  <div class="question">
-    <h4>#5 Personal Técnico</h4>
-    <p>¿Cómo evalúa el profesionalismo y conocimiento del personal?</p>
     <div class="stars" data-q="q3"></div>
+  </div>
+  <div class="question">
+    <h4>#4 Personal Técnico</h4>
+    <p>¿Cómo evalúa el profesionalismo y atención recibida por el técnico?</p>
+    <div class="stars" data-q="q4"></div>
   </div>
 
   <div class="question">
@@ -301,33 +311,65 @@ footer {
 
   <div class="question">
     <label>Comentarios Adicionales (Opcional)</label>
-    <textarea rows="4" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
+    <textarea rows="4" maxlength="500" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
   </div>
 
   <div id="mensajeError" class="error-text" style="display:none;"></div>
-  <div id="mensajeSuccess" class="success-text" style="display:none;"></div>
 
   <button class="send" id="btnEnviar" onclick="enviar()">
   Enviar Encuesta
   </button>
+
+  </div>
+
+  <div id="pantallaGracias" style="display:none; text-align:center; padding:40px 0;">
+    <h2 style="margin:0 0 12px 0; font-size:26px; font-weight:900; color:var(--dark);">¡Gracias por tu respuesta!</h2>
+    <p style="margin:0; font-size:15px; color:#6b7280;">Tu encuesta fue enviada correctamente. Valoramos mucho tu opinión para seguir mejorando nuestro servicio.</p>
+  </div>
 
   <footer>© 2026 SERVICIO Y MANTENCIONES MSOLUCIONES LTDA</footer>
 
 </div>
 
 <script>
+const tipoParam = new URLSearchParams(window.location.search).get('tipo');
+const TIPO_ENCUESTA = (tipoParam === 'convenio' || tipoParam === 'terreno') ? tipoParam : '';
+
+if (TIPO_ENCUESTA) {
+  const tipoEl = document.getElementById('tipoEncuesta');
+  tipoEl.textContent = TIPO_ENCUESTA === 'convenio' ? 'Encuesta Convenios' : 'Encuesta Terreno';
+  tipoEl.style.display = 'inline';
+}
+
 document.querySelectorAll('.stars').forEach(block => {
+  block.setAttribute('role', 'radiogroup');
   for (let i = 1; i <= 5; i++) {
     const s = document.createElement('span');
     s.innerHTML = '★';
-    s.onclick = () => {
+    s.setAttribute('role', 'radio');
+    s.setAttribute('tabindex', '0');
+    s.setAttribute('aria-label', `${i} de 5 estrellas`);
+    s.setAttribute('aria-checked', 'false');
+
+    const seleccionar = () => {
       if (encuestaYaEnviada()) return;
-    
-      [...block.children].forEach((c, idx) =>
-        c.classList.toggle('active', idx < i)
-      );
+
+      [...block.children].forEach((c, idx) => {
+        const activa = idx < i;
+        c.classList.toggle('active', activa);
+        c.setAttribute('aria-checked', activa ? 'true' : 'false');
+      });
       block.closest('.question')?.classList.remove('question-error');
     };
+
+    s.onclick = seleccionar;
+    s.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        seleccionar();
+      }
+    };
+
     block.appendChild(s);
   }
 });
@@ -335,12 +377,14 @@ document.querySelectorAll('.stars').forEach(block => {
 const nps = document.getElementById('nps');
 for (let i = 1; i <= 10; i++) {
   const b = document.createElement('button');
+  b.type = "button";
   b.textContent = i;
   b.onclick = () => {
     if (encuestaYaEnviada()) return;
-  
+
     [...nps.children].forEach(c => c.classList.remove('active'));
     b.classList.add('active');
+    nps.closest('.question')?.classList.remove('question-error');
   };
 
   nps.appendChild(b);
@@ -350,15 +394,15 @@ function limpiarErrores() {
   document.querySelectorAll('.error').forEach(e =>
     e.classList.remove('error')
   );
+  document.querySelectorAll('.question-error').forEach(e =>
+    e.classList.remove('question-error')
+  );
 
   const err = document.getElementById("mensajeError");
-  const ok = document.getElementById("mensajeSuccess");
-
   err.style.display = "none";
   err.textContent = "";
 
-  ok.style.display = "none";
-  ok.textContent = "";
+  limpiarErrorEmail();
 }
 
 function mostrarError(texto, elemento) {
@@ -372,10 +416,22 @@ function mostrarError(texto, elemento) {
   }
 }
 
-function mostrarSuccess(texto) {
-  const msg = document.getElementById("mensajeSuccess");
+function marcarError(elemento) {
+  if (!elemento) return;
+  elemento.classList.add("error");
+  elemento.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function mostrarErrorEmail(texto) {
+  const msg = document.getElementById("mensajeErrorEmail");
   msg.textContent = texto;
   msg.style.display = "block";
+}
+
+function limpiarErrorEmail() {
+  const msg = document.getElementById("mensajeErrorEmail");
+  msg.style.display = "none";
+  msg.textContent = "";
 }
 
 function cancelarEnvio() {
@@ -392,6 +448,7 @@ async function enviar() {
 
   const inputsFormulario = document.querySelectorAll('input');
   const textarea = document.querySelector('textarea');
+  const regionSelect = document.getElementById('region');
 
   const data = {
     fecha: fechaActual,
@@ -399,13 +456,14 @@ async function enviar() {
     nombre: inputsFormulario[1].value,
     cargo: inputsFormulario[2].value,
     correo: inputsFormulario[3].value,
+    region: regionSelect.value,
+    tipo: TIPO_ENCUESTA || 'no especificado',
 
 
-    q1: getStars(0), // Calidad
-    q2: getStars(1), // Requisitos
-    q3: getStars(2), // Entrega
-    q4: getStars(3), // Expectativas
-    q5: getStars(4), // Personal
+    q1: getStars(0), // Calidad del Servicio
+    q2: getStars(1), // Resolución del Problema
+    q3: getStars(2), // Entrega del Servicio
+    q4: getStars(3), // Personal Técnico
 
     nps: document.querySelector('.nps .active')?.textContent || '',
     comentarios: textarea.value
@@ -413,7 +471,7 @@ async function enviar() {
 
 
 if (!data.empresa) {
-  mostrarError("Debe indicar la empresa", inputsFormulario[0]);
+  marcarError(inputsFormulario[0]);
   cancelarEnvio();
   return;
 
@@ -421,28 +479,37 @@ if (!data.empresa) {
 
 
 if (!data.nombre) {
-  mostrarError("Debe indicar su nombre", inputsFormulario[1]);
+  marcarError(inputsFormulario[1]);
   cancelarEnvio();
   return;
 }
 
 if (!data.cargo) {
-  mostrarError("Debe indicar su cargo", inputsFormulario[2]);
+  marcarError(inputsFormulario[2]);
   cancelarEnvio();
   return;
 }
 
 if (!data.correo) {
-  mostrarError("Debe indicar un correo electrónico", inputsFormulario[3]);
+  marcarError(inputsFormulario[3]);
   cancelarEnvio();
   return;
 }
 
-if (!data.correo.includes("@")) {
-  mostrarError("Debe indicar un correo electrónico válido", inputsFormulario[3]);
+const correoValido = inputsFormulario[3].checkValidity()
+  && /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(data.correo);
+
+if (!correoValido) {
+  marcarError(inputsFormulario[3]);
+  mostrarErrorEmail("Debe ingresar un email válido");
   cancelarEnvio();
   return;
+}
 
+if (!data.region) {
+  marcarError(regionSelect);
+  cancelarEnvio();
+  return;
 }
 
 
@@ -452,17 +519,15 @@ if (!todasLasEstrellasRespondidas()) {
     pregunta.classList.add("question-error");
     pregunta.scrollIntoView({ behavior: "smooth", block: "center" });
   }
-  mostrarError("Debe responder todas las preguntas de evaluación");
   cancelarEnvio();
   return;
 }
 
 
 if (!data.nps) {
-  mostrarError(
-    "Debe indicar qué tan probable es que nos recomiende",
-    document.getElementById("nps")
-  );
+  const npsQuestion = document.getElementById("nps").closest(".question");
+  npsQuestion?.classList.add("question-error");
+  npsQuestion?.scrollIntoView({ behavior: "smooth", block: "center" });
   cancelarEnvio();
   return;
 }
@@ -471,24 +536,24 @@ if (!data.nps) {
 
   btn.disabled = true;
   btn.textContent = "Enviando…";
-  try {
-    await fetch("https://script.google.com/macros/s/AKfycbyzfIWTmXC_dPx73yR0iT2bLDqncfy1mmwQHxZF7rJ2uhhGai6cPj1vq2MFOfVXiX6O/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    marcarEncuestaEnviada();
-    bloquearFormulario();
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  } catch (e) {
-    mostrarError("Error al enviar, intente nuevamente");
-    btn.disabled = false;
-    btn.textContent = "Enviar Encuesta";
-  }
+  fetch("https://script.google.com/macros/s/AKfycbyzfIWTmXC_dPx73yR0iT2bLDqncfy1mmwQHxZF7rJ2uhhGai6cPj1vq2MFOfVXiX6O/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    signal: controller.signal
+  })
+    .catch(() => {})
+    .finally(() => clearTimeout(timeoutId));
+
+  marcarEncuestaEnviada();
+  bloquearFormulario();
 }
-const TOTAL_PREGUNTAS = 5;
+const TOTAL_PREGUNTAS = 4;
 function getStars(i) {
   return [...document.querySelectorAll('.stars')[i].children]
     .filter(s => s.classList.contains('active')).length;
@@ -504,13 +569,22 @@ function todasLasEstrellasRespondidas() {
 
 const inputsFormulario = document.querySelectorAll('input');
 
-inputsFormulario.forEach(input => {
+inputsFormulario.forEach((input, idx) => {
   input.addEventListener("input", () => {
     if (input.value.trim() !== "") {
       input.classList.remove("error");
-      document.getElementById("mensajeError").style.display = "none";
+    }
+    if (idx === 3) {
+      limpiarErrorEmail();
     }
   });
+});
+
+document.getElementById('region').addEventListener('change', function() {
+  this.classList.toggle("has-value", this.value !== "");
+  if (this.value !== "") {
+    this.classList.remove("error");
+  }
 });
 
 function primeraPreguntaSinResponder() {
@@ -524,8 +598,6 @@ function primeraPreguntaSinResponder() {
   }
   return null;
 }
-const ENCUESTA_KEY = "encuesta_msoluciones_enviada";
-
 function encuestaYaEnviada() {
   return sessionStorage.getItem("encuesta_enviada") === "true";
 }
@@ -535,22 +607,8 @@ function marcarEncuestaEnviada() {
 }
 
 function bloquearFormulario() {
-  // Inputs normales
-  document.querySelectorAll("input, textarea")
-    .forEach(el => el.disabled = true);
-
-  // Bloquear estrellas
-  document.querySelectorAll(".stars")
-    .forEach(el => el.classList.add("bloqueado"));
-
-  // Bloquear NPS
-  document.querySelectorAll(".nps")
-    .forEach(el => el.classList.add("bloqueado"));
-
-  // Ocultar botón enviar
-  document.getElementById("btnEnviar").style.display = "none";
-
-  mostrarSuccess("Gracias, ya registramos su respuesta.");
+  document.getElementById("encuestaForm").style.display = "none";
+  document.getElementById("pantallaGracias").style.display = "block";
 }
 
 if (encuestaYaEnviada()) {
