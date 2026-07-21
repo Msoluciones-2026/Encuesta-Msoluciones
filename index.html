@@ -474,7 +474,7 @@ async function enviar() {
     q3: getStars(2), // Entrega del Servicio
     q4: getStars(3), // Personal Técnico
 
-    nps: document.querySelector('.nps .active')?.textContent || '',
+    nps: Number(document.querySelector('.nps .active')?.textContent) || 0,
     comentarios: textarea.value
   };
 
