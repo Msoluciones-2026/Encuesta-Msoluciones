@@ -234,7 +234,7 @@ footer {
 <div class="container">
 
   <div class="header">
-  <img src="logo-msoluciones.png" alt="MSoluciones" class="logo-img">
+  <img src="logo-msoluciones.png" alt="MSoluciones" class="logo-img" width="2560" height="512">
   <span id="tipoEncuesta" style="display:none; font-size:12px; font-weight:700; color:#6b7280; letter-spacing:.04em; text-transform:uppercase;"></span>
 </div>
 
@@ -245,19 +245,19 @@ footer {
     <div class="grid">
       <div>
         <label for="campo-empresa">Empresa / Institución</label>
-        <input id="campo-empresa" placeholder="Ej. Clínica Santa María">
+        <input id="campo-empresa" autocomplete="organization" maxlength="100" placeholder="Ej. Clínica Santa María">
       </div>
       <div>
         <label for="campo-nombre">Nombre</label>
-        <input id="campo-nombre" placeholder="Su nombre completo">
+        <input id="campo-nombre" autocomplete="name" maxlength="100" placeholder="Su nombre completo">
       </div>
       <div>
         <label for="campo-cargo">Cargo</label>
-        <input id="campo-cargo" placeholder="Ej. Jefe de Operaciones">
+        <input id="campo-cargo" autocomplete="organization-title" maxlength="100" placeholder="Ej. Jefe de Operaciones">
       </div>
       <div>
         <label for="campo-correo">Correo electrónico</label>
-        <input id="campo-correo" type="email" placeholder="correo@ejemplo.com">
+        <input id="campo-correo" type="email" autocomplete="email" placeholder="correo@ejemplo.com">
         <div id="mensajeErrorEmail" class="error-text" style="display:none;"></div>
       </div>
       <div>
