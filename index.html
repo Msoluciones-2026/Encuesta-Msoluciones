@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Encuesta de Satisfacción - MSOLUCIONES</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="logo-msoluciones.png">
 
 <style>
 :root {
@@ -582,7 +583,7 @@ function guardarRespaldoLocal(data) {
     console.error("No se pudo guardar el respaldo local de la encuesta:", error);
   }
 }
-const TOTAL_PREGUNTAS = 4;
+const TOTAL_PREGUNTAS = document.querySelectorAll('.stars').length;
 function getStars(i) {
   return [...document.querySelectorAll('.stars')[i].children]
     .filter(s => s.classList.contains('active')).length;
