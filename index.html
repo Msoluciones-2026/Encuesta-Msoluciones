@@ -461,10 +461,10 @@ async function enviar() {
 
   const data = {
     fecha: fechaActual,
-    empresa: inputsFormulario[0].value,
-    nombre: inputsFormulario[1].value,
-    cargo: inputsFormulario[2].value,
-    correo: inputsFormulario[3].value,
+    empresa: inputsFormulario[0].value.trim(),
+    nombre: inputsFormulario[1].value.trim(),
+    cargo: inputsFormulario[2].value.trim(),
+    correo: inputsFormulario[3].value.trim(),
     region: regionSelect.value,
     tipo: TIPO_ENCUESTA || 'no especificado',
 
@@ -475,7 +475,7 @@ async function enviar() {
     q4: getStars(3), // Personal Técnico
 
     nps: Number(document.querySelector('.nps .active')?.textContent) || 0,
-    comentarios: textarea.value
+    comentarios: textarea.value.trim()
   };
 
 
