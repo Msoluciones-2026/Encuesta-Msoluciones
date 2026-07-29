@@ -244,24 +244,24 @@ footer {
     <h3>Datos del Cliente</h3>
     <div class="grid">
       <div>
-        <label>Empresa / Institución</label>
-        <input placeholder="Ej. Clínica Santa María">
+        <label for="campo-empresa">Empresa / Institución</label>
+        <input id="campo-empresa" placeholder="Ej. Clínica Santa María">
       </div>
       <div>
-        <label>Nombre</label>
-        <input placeholder="Su nombre completo">
+        <label for="campo-nombre">Nombre</label>
+        <input id="campo-nombre" placeholder="Su nombre completo">
       </div>
       <div>
-        <label>Cargo</label>
-        <input placeholder="Ej. Jefe de Operaciones">
+        <label for="campo-cargo">Cargo</label>
+        <input id="campo-cargo" placeholder="Ej. Jefe de Operaciones">
       </div>
       <div>
-        <label>Correo electrónico</label>
-        <input type="email" placeholder="correo@ejemplo.com">
+        <label for="campo-correo">Correo electrónico</label>
+        <input id="campo-correo" type="email" placeholder="correo@ejemplo.com">
         <div id="mensajeErrorEmail" class="error-text" style="display:none;"></div>
       </div>
       <div>
-        <label>Región</label>
+        <label for="region">Región</label>
         <select id="region">
           <option value="">Selecciona una región</option>
           <option value="Arica y Parinacota">Arica y Parinacota</option>
@@ -319,8 +319,8 @@ footer {
   </div>
 
   <div class="question">
-    <label>Comentarios Adicionales (Opcional)</label>
-    <textarea rows="4" maxlength="500" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
+    <label for="campo-comentarios">Comentarios Adicionales (Opcional)</label>
+    <textarea id="campo-comentarios" rows="4" maxlength="500" placeholder="¿Hay algo más que debamos saber para mejorar?"></textarea>
   </div>
 
   <div id="mensajeError" class="error-text" style="display:none;"></div>
